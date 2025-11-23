@@ -1,0 +1,84 @@
+/****
+MAIN
+****/
+.equ DISPLAYS_BASE, 0x10000020  #Endereco base dos displays de 7 segmentos
+
+.global DISPLAY
+
+/*
+Sub-rotina DISPLAY
+Exibe nos displays de 7 segmentos os digitos que foram previamente
+calculados e colocados na pilha
+
+Argumentos (passados por convenção de 'triangular.s'):
+- r16: Contem o numero de digitos a serem exibidos
+- Pilha (sp): Contem os digitos em sequencia (unidade, dezena, centena...)
+
+Registradores usados: r4, r5, r6, r7, r8, r9, r10
+ */
+DISPLAY:
+    # --- Salva os registradores que serão usados ---
+    subi sp, sp, 32
+    stw ra, 0(sp)
+    stw r4, 4(sp)
+    stw r5, 8(sp)
+    stw r6, 12(sp)
+    stw r7, 16(sp)
+    stw r8, 20(sp)
+    stw r9, 24(sp)
+    stw r10, 28(sp)
+
+    movia r9, DISPLAYS_BASE #r9 = Endereco do registrador dos displays
+    mov r10, r0             #r10 = contador de displays (0, 1, 2...)
+    mov r11, r0             #r11 = buffer acumulador para os displays (inicia zerado)
+
+DISPLAY_LOOP:
+    #Se o contador de displays (r10) for igual ao numero de digitos (r16), terminamos
+    beq r10, r16, WRITE_DISPLAYS
+
+    #Calcula o endereco do digito na pilha
+    movia r4, 32
+    add r4, r4, sp          #r4 aponta para o inicio dos digitos na pilha
+    movi r6, 4              #Carrega 4 em r6 para multiplicacao
+    mul r5, r10, r6         #Calcula o offset para o digito atual (0*4, 1*4, ...)
+    add r4, r4, r5          #SOMA r4 e r5 para obter o endereco final do digito
+    ldw r7, 0(r4)           #r7 = carrega o digito (ex: 3)
+
+    #Converte o digito (0-9) para o codigo do display de 7 segmentos
+    movia r8, SETE_SEG      #Carrega o endereco da tabela de conversao
+    add r8, r8, r7          #Adiciona o digito como um indice
+    ldb r8, 0(r8)           #Carrega o byte do padrao de 7 segmentos
+
+    #Desloca o padrao para a posicao correta (HEX0=0, HEX1=8, HEX2=16, HEX3=24)
+    #Multiplicamos o contador (r10) por 8 para saber quantos bits deslocar
+    slli r5, r10, 3         #r5 = r10 * 8
+    sll r8, r8, r5          #Desloca o padrao r8 para a esquerda por r5 bits
+
+    #Adiciona ao buffer acumulador
+    or r11, r11, r8         #Combina o novo padrao com o que ja temos
+
+    #Prepara para o proximo display
+    addi r10, r10, 1        #Incrementa o contador de displays
+    br DISPLAY_LOOP
+
+WRITE_DISPLAYS:
+    #Escreve a palavra completa de 32 bits nos displays
+    stwio r11, 0(r9)
+
+END_DISPLAY:
+    ldw ra, 0(sp)
+    ldw r4, 4(sp)
+    ldw r5, 8(sp)
+    ldw r6, 12(sp)
+    ldw r7, 16(sp)
+    ldw r8, 20(sp)
+    ldw r9, 24(sp)
+    ldw r10, 28(sp)
+    addi sp, sp, 32
+    ret
+
+SETE_SEG:
+.byte 0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F
+#Caracteres para o display: 0,1,2,3,4,5,6,7,8,9
+
+
