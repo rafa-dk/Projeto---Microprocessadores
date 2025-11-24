@@ -61,13 +61,13 @@ DISPLAY_LOOP:
 
 PROCESS_HIGH:
     subi r5, r10, 4         # Indice relativo (0-3)
-    slli r5, r5, 3          # * 8
+    slli r5, r5, 3     
     sll r8, r8, r5
     or r12, r12, r8
     br NEXT_ITER
 
 PROCESS_LOW:
-    slli r5, r10, 3         # * 8
+    slli r5, r10, 3       
     sll r8, r8, r5
     or r11, r11, r8
 
@@ -78,7 +78,7 @@ NEXT_ITER:
 
 WRITE_DISPLAYS:
     #Escreve a palavra completa de 32 bits nos displays
-    stwio r11, 0(r9)
+    stwio r11, 0(r9)        #Escreve nos displays 0-3 (offset 0x00)
     stwio r12, 16(r9)       #Escreve nos displays 4-7 (offset 0x10)
 
 END_DISPLAY:
