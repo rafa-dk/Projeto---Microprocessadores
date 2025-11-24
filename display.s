@@ -18,15 +18,18 @@ Registradores usados: r4, r5, r6, r7, r8, r9, r10
  */
 DISPLAY:
     # --- Salva os registradores que serão usados ---
-    subi sp, sp, 32
-    stw ra, 0(sp)
-    stw r4, 4(sp)
-    stw r5, 8(sp)
-    stw r6, 12(sp)
-    stw r7, 16(sp)
-    stw r8, 20(sp)
-    stw r9, 24(sp)
-    stw r10, 28(sp)
+    subi sp, sp, 36
+    stw ra, 32(sp)
+    stw fp, 28(sp)
+    stw r4, 24(sp)
+    stw r5, 20(sp)
+    stw r6, 16(sp)
+    stw r7, 12(sp)
+    stw r8, 8(sp)
+    stw r9, 4(sp)
+    stw r10, 0(sp)
+
+    addi fp, sp, 28
 
     movia r9, DISPLAYS_BASE #r9 = Endereco do registrador dos displays
     mov r10, r0             #r10 = contador de displays (0, 1, 2...)
@@ -66,15 +69,17 @@ WRITE_DISPLAYS:
     stwio r11, 0(r9)
 
 END_DISPLAY:
-    ldw ra, 0(sp)
-    ldw r4, 4(sp)
-    ldw r5, 8(sp)
-    ldw r6, 12(sp)
-    ldw r7, 16(sp)
-    ldw r8, 20(sp)
-    ldw r9, 24(sp)
-    ldw r10, 28(sp)
-    addi sp, sp, 32
+    ldw ra, 32(sp)
+    ldw fp, 28(sp)
+    ldw r4, 24(sp)
+    ldw r5, 20(sp)
+    ldw r6, 16(sp)
+    ldw r7, 12(sp)
+    ldw r8, 8(sp)
+    ldw r9, 4(sp)
+    ldw r10, 0(sp)
+    addi sp, sp, 36
+
     ret
 
 SETE_SEG:

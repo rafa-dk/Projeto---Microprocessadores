@@ -5,15 +5,16 @@
 .equ UART_BASE, 0x10001000 	#Endereco base da UART
 
 UART:
-    subi sp, sp, 24
-    stw ra, 20(sp)
-	stw fp, 16(sp)
+    subi sp, sp, 28
+    stw ra, 24(sp)
+	stw fp, 20(sp)
+	stw r4, 16(sp)
     stw r7, 12(sp)
     stw r10, 8(sp)
 	stw r11, 4(sp)
 	stw r12, 0(sp)
 
-	addi fp, sp, 16
+	addi fp, sp, 20
 
 	movia r10, UART_BASE
 POLLING:
@@ -32,13 +33,14 @@ WSPACE:
 	#Escrever caracter na memoria
 
 END_UART:
-	ldw ra, 20(sp)
-	ldw fp, 16(sp)
+	ldw ra, 24(sp)
+	ldw fp, 20(sp)
+	ldw r4, 16(sp)
     ldw r7, 12(sp)
     ldw r10, 8(sp)
 	ldw r11, 4(sp)
 	ldw r12, 0(sp)
-    addi sp, sp, 24
+    addi sp, sp, 28
 
     ret
 	
