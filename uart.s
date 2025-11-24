@@ -31,7 +31,7 @@ WSPACE:
 	stwio r4, DATA(r10)		#escreve dado em terminal do altera
 	#Escrever caracter na memoria
 
-END_UART
+END_UART:
 	ldw ra, 20(sp)
 	ldw fp, 16(sp)
     ldw r7, 12(sp)
