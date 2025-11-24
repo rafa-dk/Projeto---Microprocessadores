@@ -47,7 +47,7 @@ ARQLED:
     addi r11, r0, 1
     beq r5, r11, DESLIGA_LED #01 xx → apagar
 
-    ret                      #comando inválido → retorna
+    br FIM_LED                     #comando inválido → retorna
 
 #------acende o led---------
 LIGA_LED:
