@@ -5,10 +5,10 @@
 .equ UART_BASE, 0x10001000 	#Endereco base da UART
 
 UART:
-    subi sp, sp, 20
-    stw ra, 0(sp)
-    stw r7, 4(sp)
-    stw r10, 8(sp)
+	subi sp, sp, 20
+    	stw ra, 0(sp)
+    	stw r7, 4(sp)
+    	stw r10, 8(sp)
 	stw r11, 12(sp)
 	stw r12, 16(sp)
 
@@ -28,11 +28,11 @@ WSPACE:
 	stwio r4, DATA(r10)		#escreve dado em terminal do altera
 	#Escrever caracter na memoria
 
-END_UART
+END_UART:
 	ldw ra, 0(sp)
-    ldw r7, 4(sp)
-    ldw r10, 8(sp)
+    	ldw r7, 4(sp)
+    	ldw r10, 8(sp)
 	ldw r11, 12(sp)
 	ldw r12, 16(sp)
-    addi sp, sp, 20
-    ret
+    	addi sp, sp, 20
+    	ret
