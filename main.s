@@ -95,6 +95,9 @@ LED:
 	br POLLING
 
 TRIANGULAR:
+	call UART
+	addi r4, r4,-0x30		#converte para decimal
+	bne r4, r0, POLLING
 	call ARQTRI
 	br POLLING
 
