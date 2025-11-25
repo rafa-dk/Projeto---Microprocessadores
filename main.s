@@ -79,13 +79,12 @@ _start:
 INICIO:
 
 WSPACE:
-	movi r6, 0x4
 	ldwio r12, CONTROL(r10)		#leitura de control
 	mov r11, r12		
 	andhi r11, r11, 0xffff		#mascara para wspace
 	beq r11, r0, WSPACE		#caso !wspace retorna
 	movia r4, INICIO_CHAR
-	mul r6, r5, r6
+	slli r6, r5, 2
 	add r4, r4, r6
 	ldw r4, (r4)			#carrega caracter inicio
 	stwio r4, DATA(r10)		#escreve dado em terminal do altera
