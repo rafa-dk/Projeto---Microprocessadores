@@ -12,16 +12,15 @@ calculados e colocados na pilha
 
 Argumentos (passados por convenção de 'triangular.s'):
 - r16: Contem o numero de digitos a serem exibidos
-- Pilha (sp): Contem os digitos em sequencia (unidade, dezena, centena...)
+- r4: Endereco do buffer com os digitos
 
 Registradores usados: r4, r5, r6, r7, r8, r9, r10
  */
 DISPLAY:
     # --- Salva os registradores que serão usados ---
-    subi sp, sp, 44
-    stw ra, 40(sp)
-    stw fp, 36(sp)
-    stw r4, 32(sp)
+    subi sp, sp, 40
+    stw ra, 36(sp)
+    stw fp, 32(sp)
     stw r5, 28(sp)
     stw r6, 24(sp)
     stw r7, 20(sp)
@@ -31,7 +30,7 @@ DISPLAY:
     stw r11, 4(sp)
     stw r12, 0(sp)
 
-    addi fp, sp, 36
+    addi fp, sp, 32
 
     movia r9, DISPLAYS_BASE #r9 = Endereco do registrador dos displays
     mov r10, r0             #r10 = contador de displays (0, 1, 2...)
@@ -42,13 +41,11 @@ DISPLAY_LOOP:
     #Se o contador de displays (r10) for igual ao numero de digitos (r16), terminamos
     beq r10, r16, WRITE_DISPLAYS
 
-    #Calcula o endereco do digito na pilha
-    movia r4, 44
-    add r4, r4, sp          #r4 aponta para o inicio dos digitos na pilha
+    #Calcula o endereco do digito no buffer (r4)
     movi r6, 4              #Carrega 4 em r6 para multiplicacao
     mul r5, r10, r6         #Calcula o offset para o digito atual (0*4, 1*4, ...)
-    add r4, r4, r5          #SOMA r4 e r5 para obter o endereco final do digito
-    ldw r7, 0(r4)           #r7 = carrega o digito (ex: 3)
+    add r5, r4, r5          #SOMA r4 (base) e r5 (offset) para obter o endereco final do digito
+    ldw r7, 0(r5)           #r7 = carrega o digito (ex: 3)
 
     #Converte o digito (0-9) para o codigo do display de 7 segmentos
     movia r8, SETE_SEG      #Carrega o endereco da tabela de conversao
@@ -82,9 +79,8 @@ WRITE_DISPLAYS:
     stwio r12, 16(r9)       #Escreve nos displays 4-7 (offset 0x10)
 
 END_DISPLAY:
-    ldw ra, 40(sp)
-    ldw fp, 36(sp)
-    ldw r4, 32(sp)
+    ldw ra, 36(sp)
+    ldw fp, 32(sp)
     ldw r5, 28(sp)
     ldw r6, 24(sp)
     ldw r7, 20(sp)
@@ -93,7 +89,7 @@ END_DISPLAY:
     ldw r10, 8(sp)
     ldw r11, 4(sp)
     ldw r12, 0(sp)
-    addi sp, sp, 44
+    addi sp, sp, 40
 
     ret
 

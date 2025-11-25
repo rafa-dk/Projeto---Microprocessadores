@@ -1,11 +1,15 @@
 .equ ALAVANCAS, 0x10000040
 
+.data
+DIGITS_BUFFER:
+    .skip 32
+
+.text
 .global ARQTRI
 ARQTRI:
-    subi sp, sp, 44
-    stw ra, 40(sp)
-    stw fp, 36(sp)
-    stw r4, 32(sp)
+    subi sp, sp, 40
+    stw ra, 36(sp)
+    stw fp, 32(sp)
     stw r5, 28(sp)
     stw r6, 24(sp)
     stw r7, 20(sp)
@@ -15,13 +19,12 @@ ARQTRI:
     stw r17, 4(sp)
     stw r20, 0(sp)
 
-    addi fp, sp, 36
+    addi fp, sp, 32
 
 	movi r8, 0		#acumulador = 0
 	movi r7, 0		#contador = 1
 	movi r15, 0		#numeros armazenados (num)
 	movi r16, 0		#result_media = 0
-	movi r17, 0xFFFFFF00	#mascara para num, usaremos com and ao inves de andi pois em andi o imediato tem q ser <= 16 bits
 	movi r20, 0x4
 
 /*
@@ -37,10 +40,11 @@ CONVERTER:
 	andi r4, r4, 0xFF	#separa os 8 primeiros bits
 
 	#Prepara a pilha para armazenar 8 digitos (32 bytes)
-    subi sp, sp, 32
+    #subi sp, sp, 32
 
     movia r5, 10        #Carrega o divisor 10 em r5
     mov r16, r0         #r16 sera nosso contador de digitos
+    movia r17, DIGITS_BUFFER # Carrega endereco do buffer em r17
 
 
 DIVISAO:
@@ -54,8 +58,8 @@ DIVISAO:
     #Empilha o digito encontrado
     #O offset e calculado com base no numero de digitos ja processados
     mul r8, r16, r20    #r8 = r16 * 4 (r20 ja tem 4)
-    add r8, sp, r8      #r8 = sp + offset
-    stw r7, 0(r8)       #Salva o digito na pilha
+    add r8, r17, r8      #r8 = buffer + offset
+    stw r7, 0(r8)       #Salva o digito no buffer
 
     addi r16, r16, 1    #Incrementa o contador de digitos
 
@@ -64,24 +68,24 @@ DIVISAO:
 
 /*
 Fim da conversao
-Neste ponto, os digitos estao na pilha
+Neste ponto, os digitos estao no buffer
 Por exemplo, se o numero era 123:
-sp[0] -> 3 (unidade)
-sp[4] -> 2 (dezena)
-sp[8] -> 1 (centena)
+buffer[0] -> 3 (unidade)
+buffer[4] -> 2 (dezena)
+buffer[8] -> 1 (centena)
 O registrador r16 contem a quantidade de digitos - 1
 */
 
+movia r4, DIGITS_BUFFER
 call DISPLAY
 
 # Libera o espaco alocado na pilha para os digitos
-addi sp, sp, 32
+#addi sp, sp, 32
 
 FIM_TRI:
 
-    ldw ra, 40(sp)
-    ldw fp, 36(sp)
-    ldw r4, 32(sp)
+    ldw ra, 36(sp)
+    ldw fp, 32(sp)
     ldw r5, 28(sp)
     ldw r6, 24(sp)
     ldw r7, 20(sp)
@@ -91,6 +95,6 @@ FIM_TRI:
     ldw r17, 4(sp)
     ldw r20, 0(sp)
 
-    addi sp, sp, 44
+    addi sp, sp, 40
 
     ret
