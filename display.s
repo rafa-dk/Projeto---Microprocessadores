@@ -43,7 +43,7 @@ DISPLAY_LOOP:
 
     #Calcula o endereco do digito no buffer (r4)
     movi r6, 4              #Carrega 4 em r6 para multiplicacao
-    mul r5, r10, r6         #Calcula o offset para o digito atual (0*4, 1*4, ...)
+    slli r5, r10, 2         #Calcula o offset para o digito atual (0*4, 1*4, ...)
     add r5, fp, r5          #SOMA r4 (base) e r5 (offset) para obter o endereco final do digito
     ldw r7, (r5)           #r7 = carrega o digito (ex: 3)
 

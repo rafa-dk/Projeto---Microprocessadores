@@ -29,14 +29,14 @@ DIVISAO:
     # Divide r18 por 10
     # Usamos r18 (callee-saved) para garantir que a chamada de div (se for macro/funcao)
     # nao corrompa o valor do dividendo.
-    div r6, r18, r19    # r6 = r18 / 10 (quociente)
+    call DIV    # r6 = r18 / 10 (quociente)
 
     # Calcula o resto: resto = numero - (quociente * 10)
-    mul r7, r6, r19     # r7 = quociente * 10
+    call MULT     # r7 = quociente * 10
     sub r7, r18, r7     # r7 = r18 - r7 (resto)
 
     # Armazena o digito no buffer
-    mul r8, r16, r20    # Offset = contador * 4
+    slli r8, r16, 2     # Offset = contador * 4
     add r8, sp, r8     # Endereco = Base + Offset
     stw r7, (r8)       # Salva o digito
 

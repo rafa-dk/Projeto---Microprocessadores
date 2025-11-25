@@ -32,7 +32,7 @@ DIREITA:
     #Empilha o digito
 
     movia r7, ORDEM_ANIMACAO
-    mul r8, r15, r20    #r8 = r15 * 4 (r20 ja tem 4)
+    slli r8, r15, 2    #r8 = r15 * 4 (r20 ja tem 4)
     add r7, r7, r8
     ldw r7, (r7)
 
