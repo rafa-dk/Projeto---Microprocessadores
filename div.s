@@ -2,11 +2,14 @@
 
 DIV:
 # Prologo
-    subi sp, sp, 8
-    stw ra, 4(sp)
-    stw fp, 0(sp)
+    subi sp, sp, 16
+    stw ra, 12(sp)
+    stw fp, 8(sp)
+    stw r18,  4(sp)
+    stw r19,  0(sp)
     
-    addi fp, sp, 8
+    addi fp, sp, 16
+    
 # r6 = r18 / r19
 mov r6, r0
 
@@ -17,8 +20,10 @@ DIV_LOOP:
     br DIV_LOOP
 
 FIM_DIV:
-    ldw ra, 4(sp)
-    ldw fp, 0(sp)
-    addi sp, sp, 8
+    ldw ra, 12(sp)
+    ldw fp, 8(sp)
+    ldw r18, 4(sp)
+    ldw r19, 0(sp)
+    addi sp, sp, 16
 
     ret
