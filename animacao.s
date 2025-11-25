@@ -19,6 +19,29 @@ ARQANI:
     
     addi fp, sp, 72
 
+    #habilitar interrupcoes
+	#1. setar timer
+	#-> interrupt timer (0x10002000)
+	movia r8, 0x10002000	#timer
+	movia r9, 10000000      #200ms
+	
+	andi r6, r9, 0xFFFF
+	stwio r6, 8(r8)		#low
+
+	srli r6, r9, 16
+	stwio r6, 12(r8)		#high
+
+	movia r9, 0b111
+	stwio r9, 4(r8)
+
+	#2. setar o respectivo no bit no ienable (IRQ 1) 
+	movia r9, 0b1
+	wrctl ienable, r9	#habilita INT no PB
+
+	#3. seta o bit PIE do processador
+	movi r9, 1
+	wrctl status, r9
+
     movi r4, 0
     movia r5, UART_VALID
     mov r6, r0
@@ -28,35 +51,33 @@ ARQANI:
 	movi r16, 0x8	#qtd de loops
     movi r20, 0x4
 
-DIREITA:
-    #Empilha o digito
-
-    movia r7, ORDEM_ANIMACAO
-    slli r8, r15, 2    #r8 = r15 * 4 (r20 ja tem 4)
-    add r7, r7, r8
-    ldw r7, (r7)
-
-    add r8, sp, r8      #r8 = sp + offset
-    stw r7, (r8)       #Salva o digito na pilha
-
-    addi r15, r15, 1    #Incrementa o contador de digitos
-
-    bne r15, r16, DIREITA #Se r15 nao eh 8, continua o loop
-
-    call DISPLAY
-    call SHIFT
+ANIMACAO_LOOP:
     ldw r4, (r5)
     bne r4, r0, FIM_ANIMACAO
-    mov r15, r0
-    br DIREITA
+    br ANIMACAO_LOOP
 
-ESQUERDA: 
-
-
-    call DISPLAY
 
 # Libera o espaco alocado na pilha para os digitos
 FIM_ANIMACAO:
+
+    # DESABILITAR interrupções do TIMER
+    movia r8, 0x10002000     # base do timer
+
+    # 1. Desliga o timer e desativa ITO (bit 2)
+    stwio r0, 4(r8)          # CONTROL = 0 -> timer parado, sem interrupção
+
+    # 2. Limpa o bit da interrupção do timer em IENABLE (assumindo IRQ 0)
+    rdctl r6, ienable
+    andi  r6, r6, 0b11111110     # limpa bit 0
+    wrctl ienable, r6
+
+    # 3. desabilitar todas as interrupções globais:
+    rdctl r6, status
+    andi  r6, r6, 0xFFFE        # zera bit PIE
+    wrctl status, r6
+    
+    # Epilogo
+
     ldw ra, 68(sp)
     ldw fp, 64(sp)
     ldw r4, 60(sp)

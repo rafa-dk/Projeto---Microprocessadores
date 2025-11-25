@@ -4,8 +4,9 @@ RTI
 .org 0x20
 
 #PROLOGO
-	addi sp, sp, -4
-	stw ra, (sp)
+	addi sp, sp, -8
+	stw ra, 4(sp)
+	stw fp, 0(sp)
 #--------------------------
 	rdctl et, ipending
 	beq et, r0, OTHER_EXCEPTIONS
@@ -21,13 +22,33 @@ OTHER_INTERRUPTS:
 OTHER_EXCEPTIONS:
 #EPILOGO
 FIM_RTI:
-	ldw ra, (sp)
-	addi sp, sp, 4
+	ldw ra, 4(sp)
+	ldw fp, 0(sp)
+	addi sp, sp, 8
 	eret
 
 
-#ROTINA KEY
+#ROTINA TIMER
 EXT_IRQ1:
+	DIREITA:
+    #Empilha o digito
+
+    movia r7, ORDEM_ANIMACAO
+    slli r8, r15, 2    #r8 = r15 * 4 (r20 ja tem 4)
+    add r7, r7, r8
+    ldw r7, (r7)
+
+    add r8, fp, r8      #r8 = sp + offset
+    stw r7, (r8)       #Salva o digito na pilha
+
+    addi r15, r15, 1    #Incrementa o contador de digitos
+
+    bne r15, r16, DIREITA #Se r15 nao eh 8, continua o loop
+
+    call DISPLAY
+    call SHIFT
+    mov r15, r0
+    br DIREITA
 
 	
 
@@ -52,29 +73,6 @@ _start:
 	movia r10, 0x10001000
 	mov r5, r0
 	movi r7, 20
-/*
-#habilitar interrupcoes
-	#1. setar timer
-	#-> interrupt timer (0x10002000)
-	movia r8, 0x10002000	#timer
-	movia r9, 25000000	
-	
-	andi r6, r9, 0xFFFF
-	stwio r6, 8(r8)		#low
-
-	srli r6, r9, 16
-	stwio r6, 12(r8)		#high
-
-	movia r9, 0b111
-	stwio r9, 4(r8)
-
-	#2. setar o respectivo no bit no ienable (IRQ 1) 
-	movia r9, 0b1
-	wrctl ienable, r9	#habilita INT no PB
-
-	#3. seta o bit PIE do processador
-	movi r9, 1
-	wrctl status, r9*/
 
 INICIO:
 
