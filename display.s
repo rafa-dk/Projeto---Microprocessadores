@@ -30,7 +30,7 @@ DISPLAY:
     stw r11, 4(sp)
     stw r12, 0(sp)
 
-    addi fp, sp, 32
+    addi fp, sp, 40
 
     movia r9, DISPLAYS_BASE #r9 = Endereco do registrador dos displays
     mov r10, r0             #r10 = contador de displays (0, 1, 2...)
@@ -44,16 +44,15 @@ DISPLAY_LOOP:
     #Calcula o endereco do digito no buffer (r4)
     movi r6, 4              #Carrega 4 em r6 para multiplicacao
     mul r5, r10, r6         #Calcula o offset para o digito atual (0*4, 1*4, ...)
-    add r5, r4, r5          #SOMA r4 (base) e r5 (offset) para obter o endereco final do digito
-    ldw r7, 0(r5)           #r7 = carrega o digito (ex: 3)
+    add r5, fp, r5          #SOMA r4 (base) e r5 (offset) para obter o endereco final do digito
+    ldw r7, (r5)           #r7 = carrega o digito (ex: 3)
 
     #Converte o digito (0-9) para o codigo do display de 7 segmentos
     movia r8, SETE_SEG      #Carrega o endereco da tabela de conversao
     add r8, r8, r7          #Adiciona o digito como um indice
-    ldb r8, 0(r8)           #Carrega o byte do padrao de 7 segmentos
+    ldb r8, (r8)           #Carrega o byte do padrao de 7 segmentos
 
     # Verifica se eh Low (0-3) ou High (4-7)
-    movi r6, 4
     blt r10, r6, PROCESS_LOW
 
 PROCESS_HIGH:
