@@ -47,6 +47,7 @@ DIREITA:
     call SHIFT
     ldw r4, (r5)
     bne r4, r0, FIM_ANIMACAO
+    mov r15, r0
     br DIREITA
 
 ESQUERDA: 
