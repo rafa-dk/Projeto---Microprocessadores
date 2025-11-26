@@ -54,6 +54,8 @@ EXT_IRQ1:
     call DISPLAY
     call SHIFT_R
     mov r15, r0
+	movia r9, 0b101
+	stwio r9, 4(r10)
     br FIM_RTI
 
 	
