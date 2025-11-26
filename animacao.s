@@ -81,6 +81,21 @@ FIM_ANIMACAO:
     rdctl r6, status
     andi  r6, r6, 0xFFFE        # zera bit PIE
     wrctl status, r6
+
+
+#Apagar Display
+    movi r15, 0		#num de iteracoes
+    movi r7, 10
+OFF_ANIMACAO:
+    slli r8, r15, 2    #r8 = r15 * 4 (r20 ja tem 4)
+    add r8, sp, r8      #r8 = sp + offset
+    stw r7, (r8)       #Salva o digito na pilha
+
+    addi r15, r15, 1    #Incrementa o contador de digitos
+
+    bne r15, r16, OFF_ANIMACAO #Se r15 nao eh 8, continua o loop
+
+    call DISPLAY
     
     # Epilogo
 
