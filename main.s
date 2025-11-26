@@ -32,6 +32,10 @@ FIM_RTI:
 
 #ROTINA TIMER
 EXT_IRQ1:
+    #Limpa o bit de timeout do timer para evitar interrupcoes continuas
+    movia r10, 0x10002000
+    stwio r0, (r10)    # Escreve 0 no status para limpar o bit TO
+
 	DIREITA:
     #Empilha o digito
 
