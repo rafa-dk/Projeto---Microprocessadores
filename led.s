@@ -67,14 +67,7 @@ DESLIGA_LED:
 
 FIM_LED:
 
-SPACE_LED:
-	movia r10, UART_BASE
-	ldwio r12, CONTROL(r10)		#leitura de control
-	mov r11, r12		
-	andhi r11, r11, 0xffff		#mascara para wspace
-	beq r11, r0, SPACE_LED		#caso !wspace retorna
-	movi r6, 32
-	stwio r6, DATA(r10)		#escreve dado em terminal do altera
+    call ESPACO
 
     ldw ra, 36(sp)
     ldw fp, 32(sp)

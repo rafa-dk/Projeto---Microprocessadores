@@ -98,16 +98,8 @@ OFF_ANIMACAO:
     bne r15, r16, OFF_ANIMACAO #Se r15 nao eh 8, continua o loop
 
     call DISPLAY
+    call ESPACO
 
-SPACE_ANI:
-	movia r10, UART_BASE
-	ldwio r12, CONTROL(r10)		#leitura de control
-	mov r11, r12		
-	andhi r11, r11, 0xffff		#mascara para wspace
-	beq r11, r0, SPACE_ANI		#caso !wspace retorna
-	movi r4, 32
-	stwio r4, DATA(r10)		#escreve dado em terminal do altera
-    
     # Epilogo
 
     ldw ra, 68(sp)

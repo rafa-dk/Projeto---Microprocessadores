@@ -139,16 +139,7 @@ TRIANGULAR:
 	call UART
 	addi r4, r4,-0x30		#converte para decimal
 	bne r4, r0, POLLING
-	
-SPACE_TRI:
-	movia r10, UART_BASE
-	ldwio r12, CONTROL(r10)		#leitura de control
-	mov r11, r12		
-	andhi r11, r11, 0xffff		#mascara para wspace
-	beq r11, r0, SPACE_TRI		#caso !wspace retorna
-	movi r4, 32
-	stwio r4, DATA(r10)		#escreve dado em terminal do altera
-
+	call ESPACO
 	call ARQTRI
 	br POLLING
 
@@ -156,5 +147,6 @@ ANIMACAO:
 	call UART
 	addi r4, r4,-0x30		#converte para decimal
 	bne r4, r0, POLLING
+	call ESPACO
 	call ARQANI
 	br POLLING
