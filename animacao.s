@@ -52,8 +52,14 @@ ARQANI:
     movi r20, 0x4
 
 ANIMACAO_LOOP:
-    ldw r4, (r5)
-    #bne r4, r0, FIM_ANIMACAO
+    call UART
+    movi r9, 0x2
+    addi r4, r4,-0x30
+    bne r4, r9, ANIMACAO_LOOP
+    call UART
+    movi r9, 0x1
+    addi r4, r4, 0x30
+    beq r4, r0, FIM_ANIMACAO
     br ANIMACAO_LOOP
 
 
