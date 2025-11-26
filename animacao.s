@@ -84,6 +84,7 @@ FIM_ANIMACAO:
 #Apagar Display
     movi r15, 0		#num de iteracoes
     movi r7, 10
+    
 OFF_ANIMACAO:
     slli r8, r15, 2    #r8 = r15 * 4 (r20 ja tem 4)
     add r8, sp, r8      #r8 = sp + offset

@@ -24,12 +24,13 @@ CONVERTER:
     ldwio r18, (r10)    # Le valor das chaves para r18 (Dividend)
     andi r18, r18, 0xFF # Mascara para 8 bits
     mov r6, r18
+    beq r6, r0, DIVISAO
 
 NUM_TRIANGULAR:
     #Calcula o numero triangular
     add r18, r18, r17
     addi r17, r17, 1
-    bne r6, r17, NUM_TRIANGULAR 
+    bne r6, r17, NUM_TRIANGULAR
 
 DIVISAO:
     # Divide r18 por 10
