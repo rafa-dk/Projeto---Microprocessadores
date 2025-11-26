@@ -32,9 +32,23 @@ FIM_RTI:
 
 #ROTINA TIMER
 EXT_IRQ1:
-    #Limpa o bit de timeout do timer para evitar interrupcoes continuas
+    # Salva contexto (registradores voláteis que a ISR ou chamadas dentro dela podem modificar)
+    subi sp, sp, 44
+    stw ra, 40(sp)
+    stw r4, 36(sp)
+    stw r5, 32(sp)
+    stw r6, 28(sp)
+    stw r7, 24(sp)
+    stw r8, 20(sp)
+    stw r9, 16(sp)
+    stw r10, 12(sp)
+    stw r11, 8(sp)
+    stw r12, 4(sp)
+    # r15 e r16 sao usados como variaveis globais da animacao, nao salvamos para manter o estado
+
+    # Limpa o bit de timeout do timer
     movia r10, 0x10002000
-    stwio r0, (r10)    # Escreve 0 no status para limpar o bit TO
+    stwio r0, 0(r10)    # Escreve 0 no status para limpar o bit TO
 
 	DIREITA:
     #Empilha o digito
@@ -54,8 +68,20 @@ EXT_IRQ1:
     call DISPLAY
     call SHIFT_R
     mov r15, r0
-	movia r9, 0b101
-	stwio r9, 4(r10)
+    
+    # Restaura contexto
+    ldw ra, 40(sp)
+    ldw r4, 36(sp)
+    ldw r5, 32(sp)
+    ldw r6, 28(sp)
+    ldw r7, 24(sp)
+    ldw r8, 20(sp)
+    ldw r9, 16(sp)
+    ldw r10, 12(sp)
+    ldw r11, 8(sp)
+    ldw r12, 4(sp)
+    addi sp, sp, 44
+
     br FIM_RTI
 
 	

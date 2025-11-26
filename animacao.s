@@ -29,7 +29,7 @@ ARQANI:
 	srli r6, r9, 16
 	stwio r6, 12(r10)	#high
 
-	movia r9, 0b101
+	movia r9, 0b111
 	stwio r9, 4(r10)
 
 	#2. setar o respectivo no bit no ienable (IRQ 1) 
@@ -56,8 +56,8 @@ ANIMACAO_LOOP:
     bne r4, r9, ANIMACAO_LOOP
     call UART
     movi r9, 0x1
-    addi r4, r4, 0x30
-    beq r4, r0, FIM_ANIMACAO
+    addi r4, r4, -0x30
+    beq r4, r9, FIM_ANIMACAO
     br ANIMACAO_LOOP
 
 
