@@ -21,7 +21,7 @@ ARQANI:
 	#1. setar timer
 	#-> interrupt timer (0x10002000)
 	movia r10, 0x10002000	#timer
-	movia r9, 100000000     #200ms
+	movia r9, 10000000     #200ms
 
 	andi r6, r9, 0xFFFF
 	stwio r6, 8(r10)	#low
