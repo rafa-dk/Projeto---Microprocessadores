@@ -50,7 +50,7 @@ EXT_IRQ1:
     call DISPLAY
     call SHIFT
     mov r15, r0
-    br DIREITA
+    br FIM_RTI
 
 	
 
