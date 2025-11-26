@@ -1,5 +1,4 @@
 .global ARQLED
-.equ LED_RED, 0x10000000   #Endereco do registrador dos LEDs
 
 ARQLED:
 
@@ -67,6 +66,16 @@ DESLIGA_LED:
     br FIM_LED
 
 FIM_LED:
+
+SPACE_LED:
+	movia r10, UART_BASE
+	ldwio r12, CONTROL(r10)		#leitura de control
+	mov r11, r12		
+	andhi r11, r11, 0xffff		#mascara para wspace
+	beq r11, r0, SPACE_LED		#caso !wspace retorna
+	movi r6, 32
+	stwio r6, DATA(r10)		#escreve dado em terminal do altera
+
     ldw ra, 36(sp)
     ldw fp, 32(sp)
     ldw r5, 28(sp)
