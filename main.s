@@ -94,18 +94,18 @@ BOTAO_IRQ:
 	bne r12, r0, BOTAO_2
 
 	movia r11, DIRECAO_ANIMACAO
-	ldw r12, (r11)
-	xor r12, r12, 1
+	xori r12, r12, 1
 	stw r12, (r11)
+	ldw r12, (r11)
 
 	stwio r0, (r9)	#limpa edge capture
 	br FIM_RTI
 
 BOTAO_2:
 	movia r11, POWER_BUTTON_ANIMACAO
-	ldw r12, (r11)
-	xor r12, r12, 1
+	xori r12, r12, 1
 	stw r12, (r11)
+	ldw r12, (r11)
 
 	stwio r0, (r9)	#limpa edge capture
 
