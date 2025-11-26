@@ -112,6 +112,3 @@ OFF_ANIMACAO:
     addi sp, sp, 72
 
     ret
-
-ORDEM_ANIMACAO:
-.word 6,2,0,2,10,1,0,10

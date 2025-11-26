@@ -48,7 +48,7 @@ EXT_IRQ1:
     bne r15, r16, DIREITA #Se r15 nao eh 8, continua o loop
 
     call DISPLAY
-    call SHIFT
+    call SHIFT_R
     mov r15, r0
     br FIM_RTI
 
@@ -127,6 +127,3 @@ ANIMACAO:
 	bne r4, r0, POLLING
 	call ARQANI
 	br POLLING
-
-INICIO_CHAR:
-.word 69,110,116,114,101,32,99,111,109,32,111,32,99,111,109,97,110,100,111,58
