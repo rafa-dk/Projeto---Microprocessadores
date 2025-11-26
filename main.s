@@ -140,15 +140,15 @@ TRIANGULAR:
 	addi r4, r4,-0x30		#converte para decimal
 	bne r4, r0, POLLING
 	
-WSPACE:
+SPACE_TRI:
 	ldwio r12, CONTROL(r10)		#leitura de control
 	mov r11, r12		
 	andhi r11, r11, 0xffff		#mascara para wspace
-	beq r11, r0, WSPACE		#caso !wspace retorna
+	beq r11, r0, SPACE_TRI		#caso !wspace retorna
 	movi r4, 32
 	ldw r4, (r4)			#carrega caracter inicio
 	stwio r4, DATA(r10)		#escreve dado em terminal do altera
-	bne r5, r7, WSPACE
+	bne r5, r7, SPACE_TRI
 
 	call ARQTRI
 	br POLLING
