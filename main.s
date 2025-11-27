@@ -25,10 +25,10 @@ RTI
 	beq et, r0, OTHER_EXCEPTIONS
 	subi ea, ea, 4
 	
-	andi r13, et, 1 
-	bne r13, r0, TIMER_IRQ
 	andi r13, et, 2
 	bne r13, r0, BOTAO_IRQ
+	andi r13, et, 1 
+	bne r13, r0, TIMER_IRQ
 	call OTHER_INTERRUPTS
 
 OTHER_INTERRUPTS:
@@ -94,6 +94,7 @@ BOTAO_IRQ:
 	bne r12, r0, BOTAO_2
 
 	movia r11, DIRECAO_ANIMACAO
+	ldw r12, (r11)
 	xori r12, r12, 1
 	stw r12, (r11)
 	ldw r12, (r11)
@@ -103,6 +104,7 @@ BOTAO_IRQ:
 
 BOTAO_2:
 	movia r11, STOP_BUTTON_ANIMACAO
+	ldw r12, (r11)
 	xori r12, r12, 1
 	stw r12, (r11)
 	ldw r12, (r11)
