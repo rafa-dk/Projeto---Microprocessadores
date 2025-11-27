@@ -1,7 +1,11 @@
-.global ARQTRI
+/*********
+TRIANGULAR
+**********/
 
-ARQTRI:
-    # Prologo
+.global TRIANGULAR
+
+TRIANGULAR:
+    #Prologo
     subi sp, sp, 60
     stw ra, 56(sp)
     stw fp, 52(sp)
@@ -13,16 +17,16 @@ ARQTRI:
     
     addi fp, sp, 60
 
-    # Inicializacao
-    movi r16, 0         # Contador de digitos
-    movi r19, 10        # Divisor (10)
-    movi r20, 4         # Tamanho da palavra (4 bytes)
-    mov r17, r0         # Variavel para calcular o numero triangular
+    #Inicializacao
+    movi r16, 0         #Contador de digitos
+    movi r19, 10        #Divisor (10)
+    movi r20, 4         #Tamanho da palavra (4 bytes)
+    mov r17, r0         #Variavel para calcular o numero triangular
 
 CONVERTER:
     movia r10, ALAVANCAS
-    ldwio r18, (r10)    # Le valor das chaves para r18 (Dividend)
-    andi r18, r18, 0xFF # Mascara para 8 bits
+    ldwio r18, (r10)    #Le valor das chaves para r18 (Dividend)
+    andi r18, r18, 0xFF #Mascara para 8 bits
     mov r6, r18
     beq r6, r0, DIVISAO
 
@@ -33,30 +37,28 @@ NUM_TRIANGULAR:
     bne r6, r17, NUM_TRIANGULAR
 
 DIVISAO:
-    # Divide r18 por 10
-    # Usamos r18 (callee-saved) para garantir que a chamada de div (se for macro/funcao)
-    # nao corrompa o valor do dividendo.
-    div r6, r18, r19   # r6 = r18 / 10 (quociente)
+    #Divide r18 por 10
+    div r6, r18, r19   #r6 = r18 / 10 (quociente)
 
-    # Calcula o resto: resto = numero - (quociente * 10)
-    mul r7, r6, r19   # r7 = quociente * 10
-    sub r7, r18, r7     # r7 = r18 - r7 (resto)
+    #Calcula o resto: resto = numero - (quociente * 10)
+    mul r7, r6, r19   #r7 = quociente * 10
+    sub r7, r18, r7     #r7 = r18 - r7 (resto)
 
-    # Armazena o digito no buffer
-    slli r8, r16, 2     # Offset = contador * 4
-    add r8, sp, r8     # Endereco = Base + Offset
-    stw r7, (r8)       # Salva o digito
+    #Armazena o digito no buffer
+    slli r8, r16, 2     #Offset = contador * 4
+    add r8, sp, r8     #Endereco = Base + Offset
+    stw r7, (r8)       #Salva o digito
 
-    addi r16, r16, 1    # Incrementa contador
+    addi r16, r16, 1    #Incrementa contador
 
-    mov r18, r6         # Atualiza o numero com o quociente
-    bne r18, r0, DIVISAO # Se quociente != 0, continua
+    mov r18, r6         #Atualiza o numero com o quociente
+    bne r18, r0, DIVISAO #Se quociente != 0, continua
 
-    # Chama DISPLAY
+    #Chama DISPLAY
     call DISPLAY
 
 FIM_TRI:
-    # Epilogo
+    #Epilogo
     ldw ra, 56(sp)
     ldw fp, 52(sp)
     ldw r16, 48(sp)

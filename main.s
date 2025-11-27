@@ -4,7 +4,7 @@ RTI
 .org 0x20
 
 #PROLOGO
-# Salva contexto (registradores voláteis que a ISR ou chamadas dentro dela podem modificar)
+#Salva contexto (registradores volateis que a ISR ou chamadas dentro dela podem modificar)
 	subi sp, sp, 80
 	stw ra, 76(sp)
 	stw fp, 72(sp)
@@ -17,7 +17,7 @@ RTI
     stw r10, 44(sp)
     stw r11, 40(sp)
     stw r12, 36(sp)
-    # r15 e r16 sao usados como variaveis globais da animacao, nao salvamos para manter o estado
+    #r15 e r16 sao usados como variaveis globais da animacao, nao salvamos para manter o estado
 
 	addi fp, sp, 80
 #--------------------------
@@ -55,9 +55,9 @@ FIM_RTI:
 
 #ROTINA TIMER
 TIMER_IRQ:
-    # Limpa o bit de timeout do timer
+    #Limpa o bit de timeout do timer
     movia r10, 0x10002000
-    stwio r0, 0(r10)    # Escreve 0 no status para limpar o bit TO
+    stwio r0, 0(r10)    #Escreve 0 no status para limpar o bit TO
 	movia r12, DIRECAO_ANIMACAO
 	ldw r12, (r12)
 
@@ -90,7 +90,7 @@ BOTAO_IRQ:
 
 	#Key 1 ou Key 2
 	ldwio r11, (r9)
-	andi r12, r11, 0b100	#eh Key 2?
+	andi r12, r11, 0b100	#Eh Key 2?
 	bne r12, r0, BOTAO_2
 
 	movia r11, DIRECAO_ANIMACAO
@@ -99,7 +99,7 @@ BOTAO_IRQ:
 	stw r12, (r11)
 	ldw r12, (r11)
 
-	stwio r0, (r9)	#limpa edge capture
+	stwio r0, (r9)	#Limpa edge capture
 	br FIM_RTI
 
 BOTAO_2:
@@ -109,7 +109,7 @@ BOTAO_2:
 	stw r12, (r11)
 	ldw r12, (r11)
 
-	stwio r0, (r9)	#limpa edge capture
+	stwio r0, (r9)	#Limpa edge capture
 
 	beq	r12, r0, STOP
 
@@ -139,18 +139,18 @@ _start:
 INICIO:
 
 WSPACE:
-	ldwio r12, CONTROL(r10)		#leitura de control
+	ldwio r12, CONTROL(r10)		#Leitura de control
 	mov r11, r12		
-	andhi r11, r11, 0xffff		#mascara para wspace
-	beq r11, r0, WSPACE		#caso !wspace retorna
+	andhi r11, r11, 0xffff		#Mascara para wspace
+	beq r11, r0, WSPACE		#Caso !wspace retorna
 	movia r4, INICIO_CHAR
 	slli r6, r5, 2
 	add r4, r4, r6
-	ldw r4, (r4)			#carrega caracter inicio
-	stwio r4, DATA(r10)		#escreve dado em terminal do altera
+	ldw r4, (r4)			#Carrega caracter inicio
+	stwio r4, DATA(r10)		#Escreve dado em terminal do altera
 	addi r5, r5, 1
 	bne r5, r7, WSPACE
-	#escrever caracter na memoria
+	#Escrever caracter na memoria
 
 
 
@@ -158,34 +158,34 @@ POLLING:
 
 	call UART
 	
-	addi r4, r4,-0x30		#converte para decimal
-	beq r4, r0, LED
+	addi r4, r4,-0x30		#Converte para decimal
+	beq r4, r0, LED_VER
 
 	addi r8, r0, 1
-	beq r4, r8, TRIANGULAR
+	beq r4, r8, TRIANGULAR_VER
 
 	addi r8, r0, 2
-	beq r4, r8, ANIMACAO
+	beq r4, r8, ANIMACAO_VER
 
 	br POLLING
 
 
-LED:
-	call ARQLED
+LED_VER:
+	call LED
 	br POLLING
 
-TRIANGULAR:
+TRIANGULAR_VER:
 	call UART
-	addi r4, r4,-0x30		#converte para decimal
+	addi r4, r4,-0x30		#Converte para decimal
 	bne r4, r0, POLLING
 	call ESPACO
-	call ARQTRI
+	call TRIANGULAR
 	br POLLING
 
-ANIMACAO:
+ANIMACAO_VER:
 	call UART
-	addi r4, r4,-0x30		#converte para decimal
+	addi r4, r4,-0x30		#Converte para decimal
 	bne r4, r0, POLLING
 	call ESPACO
-	call ARQANI
+	call ANIMACAO
 	br POLLING

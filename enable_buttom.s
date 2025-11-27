@@ -1,3 +1,7 @@
+/************
+ENABLE BUTTOM
+************/
+
 .global BUTTOM_ON
 .global BUTTOM_OFF
 
@@ -11,17 +15,17 @@ BUTTOM_ON:
 
     addi fp, sp, 16
 
-    #habilitar interrupcoes
-	#1. setar qual botao precisa da INT
-	#-> interrupt mask register (0x10000058)
+    #Habilitar interrupcoes
+	#1. Setar qual botao precisa da INT
+	#-> Interrupt mask register (0x10000058)
 	movia r8, BUTTOM_BASE
 	movia r9, 0b110
 	stwio r9, (r8)
 
-	#2. setar o respectivo no bit no ienable (IRQ 1) 
+	#2. Setar o respectivo no bit no ienable (IRQ 1) 
     rdctl r10, ienable
-    ori r10, r10, 0b10  # Habilita IRQ 1 (Botoes) preservando outras (Timer IRQ 0)
-	wrctl ienable, r10	#habilita INT no PB
+    ori r10, r10, 0b10  #Habilita IRQ 1 (Botoes) preservando outras (Timer IRQ 0)
+	wrctl ienable, r10	#Habilita INT no PB
 
     #Epilogo
     ldw ra, 12(sp)
@@ -42,16 +46,16 @@ BUTTOM_OFF:
 
     addi fp, sp, 16
 
-    #desabilitar interrupcoes
-    #1. limpar qual botao precisa da INT
-    #-> interrupt mask register (0x10000058)
+    #Desabilitar interrupcoes
+    #1. Limpar qual botao precisa da INT
+    #-> Interrupt mask register (0x10000058)
     movia r8, BUTTOM_BASE
     movi r9, 0b000
     stwio r9, (r8)
 
-    #2. desabilitar o respectivo no bit no ienable (IRQ 1) 
+    #2. Desabilitar o respectivo no bit no ienable (IRQ 1) 
     movi r9, 0b0
-    wrctl ienable, r9	#desabilita INT no PB
+    wrctl ienable, r9	#Desabilita INT no PB
 
     #Epilogo
     ldw ra, 12(sp)

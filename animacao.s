@@ -1,8 +1,12 @@
-.global ARQANI
+/*******
+ANIMACAO
+*******/
+
+.global ANIMACAO
 .global ORDEM_ANIMACAO
 
-ARQANI:
-    # Prologo
+ANIMACAO:
+    #Prologo
     subi sp, sp, 72
     stw ra, 68(sp)
     stw fp, 64(sp)
@@ -17,23 +21,16 @@ ARQANI:
     
     addi fp, sp, 72
 
-    # Inicializa variaveis GLOBAIS da animacao (usadas na ISR) ANTES de habilitar interrupcoes
-    movi r15, 0		#num de iteracoes
-	movi r16, 0x8	#qtd de loops
-    movi r20, 0x4
-    movi r4, 0
-    movia r5, UART_BASE
-    mov r6, r0
-	movi r8, 0		#topo da pilha
-	movi r7, 0		#digito
-
+    #Call para habilitar botao e timer
     call RESUME_ANIMACAO
     call BUTTOM_ON
 
-    # Habilita interrupcoes globais (PIE)
+    #Habilita interrupcoes globais (PIE)
     movi r9, 1
     wrctl status, r9
 
+#Loop da animacao
+#Verificacao dos digitos para saida em 21
 ANIMACAO_LOOP:
     call UART
     movi r9, 0x2
@@ -46,15 +43,16 @@ ANIMACAO_LOOP:
     br ANIMACAO_LOOP
 
 FIM_ANIMACAO:
-    # Desabilita interrupcoes globais (PIE)
+    #Desabilita interrupcoes globais (PIE)
     movi r9, 0
     wrctl status, r9
 
+    #Desabilita botao e timer
     call STOP_ANIMACAO
     call BUTTOM_OFF
 
-#Apagar Display
-    movi r15, 0		#num de iteracoes
+/***********Apagar Display***********/
+    movi r15, 0		#Num de iteracoes
     movi r7, 12
 
 OFF_ANIMACAO:
@@ -67,9 +65,11 @@ OFF_ANIMACAO:
     bne r15, r16, OFF_ANIMACAO #Se r15 nao eh 8, continua o loop
 
     call DISPLAY
-    call ESPACO
+    call ESPACO     #Espaco no terminal
+/************************************/
 
-    # Epilogo
+
+    #Epilogo
 
     ldw ra, 68(sp)
     ldw fp, 64(sp)
