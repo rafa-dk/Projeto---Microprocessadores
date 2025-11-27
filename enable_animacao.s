@@ -68,7 +68,8 @@ RESUME_ANIMACAO:
 	stwio r9, 4(r10)
 
 	#2. setar o respectivo no bit no ienable (IRQ 1) 
-	movia r9, 0b1
+    rdctl r9, ienable
+    ori r9, r9, 1       # Habilita IRQ 0 (Timer) preservando outras
 	wrctl ienable, r9	#habilita INT no PB
 
 	#3. seta o bit PIE do processador

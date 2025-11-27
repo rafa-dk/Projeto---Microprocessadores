@@ -19,7 +19,9 @@ BUTTOM_ON:
 	stwio r9, (r8)
 
 	#2. setar o respectivo no bit no ienable (IRQ 1) 
-	wrctl ienable, r9	#habilita INT no PB
+    rdctl r10, ienable
+    ori r10, r10, 0b10  # Habilita IRQ 1 (Botoes) preservando outras (Timer IRQ 0)
+	wrctl ienable, r10	#habilita INT no PB
 
 	#3. seta o bit PIE do processador
 	movi r9, 1
