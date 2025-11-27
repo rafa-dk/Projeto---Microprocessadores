@@ -27,9 +27,25 @@ BUTTOM_ON:
 	movi r9, 1
 	wrctl status, r9
 
+    #Epilogo
+    ldw ra, 12(sp)
+    ldw fp, 8(sp)
+    ldw r8, 4(sp)
+    ldw r9, 0(sp)
+    addi sp, sp, 16
+
     ret
 
 BUTTOM_OFF:
+    #Prologo
+    subi sp, sp, 16
+    stw ra, 12(sp)
+    stw fp, 8(sp)
+    stw r8, 4(sp)
+    stw r9, 0(sp)
+
+    addi fp, sp, 16
+
     #desabilitar interrupcoes
     #1. limpar qual botao precisa da INT
     #-> interrupt mask register (0x10000058)
