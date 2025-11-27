@@ -29,6 +29,14 @@ STOP_ANIMACAO:
     andi  r6, r6, 0xFFFE        # zera bit PIE
     wrctl status, r6
 
+    # Epilogo
+    ldw ra, 16(sp)
+    ldw fp, 12(sp)
+    ldw r6, 8(sp)
+    ldw r9, 4(sp)
+    ldw r10, 0(sp)
+    addi sp, sp, 20
+
     ret
 
 RESUME_ANIMACAO:
